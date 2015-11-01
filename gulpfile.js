@@ -16,6 +16,8 @@ var sass = require('gulp-sass');
 var concatCss = require('gulp-concat-css');
 var livereload = require('gulp-livereload');
 var exec = require('child_process').exec;
+var minifyCss = require('gulp-minify-css');
+var htmlreplace = require('gulp-html-replace');
 
 function handleErrors() {
   var args = Array.prototype.slice.call(arguments);
@@ -62,12 +64,17 @@ gulp.task('server', function (cb) {
   });
 });
 
+gulp.task('copy', function(){
+  gulp.src('index.html')
+  .pipe(gulp.dest('./build/'));
+});
+
 gulp.task('sass', function() {
-    return gulp.src('css/scss/*.scss')
-        .pipe(sass())
-        .pipe(concatCss('style.css'))
-        .pipe(gulp.dest('./build/'))
-        .pipe(livereload());
+  return gulp.src('css/scss/*.scss')
+      .pipe(sass())
+      .pipe(concatCss('style.css'))
+      .pipe(gulp.dest('./build/'))
+      .pipe(livereload());
 });
 
 gulp.task('watch', function() {
@@ -76,12 +83,11 @@ gulp.task('watch', function() {
   return buildWatchScript('js/app.js');
 });
 
-gulp.task('default', ['server', 'watch', 'sass']);
+gulp.task('default', ['sass', 'watch', 'copy', 'server']);
 
 
 //
-//FUNCTION FOR PROD
-//IT IS CURRENTLY NOT OFFICALLY SUPPORTED
+//TASK FOR PROD
 //
 
 function buildProdScript(file) {
@@ -107,4 +113,26 @@ function buildProdScript(file) {
   return rebundle();
 }
 
+gulp.task('build', function() {
+  return buildProdScript('js/app.js');
+});
 
+gulp.task('sass-build', function() {
+  return gulp.src('css/scss/*.scss')
+      .pipe(sass())
+      .pipe(concatCss('style.min.css'))
+      .pipe(minifyCss({compatibility: 'ie8'}))
+      .pipe(gulp.dest('./build/'))
+      .pipe(livereload());
+});
+
+gulp.task('replaceHTML', function(){
+  gulp.src('index.html')
+    .pipe(htmlreplace({
+      'css': 'style.min.css',
+      'js': 'bundle.min.js'
+    }))
+    .pipe(gulp.dest('./build/'));
+});
+
+gulp.task('prod', ['build', 'sass-build', 'replaceHTML']);
