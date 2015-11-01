@@ -4,7 +4,9 @@
   "description": "React development boilerplate",
   "main": "index.html",
   "scripts": {
-    "start": "gulp"
+    "start": "gulp",
+    "build": "gulp-prod",
+    "clean": "rm -rf build"
   },
   "keywords": [
     "react"
