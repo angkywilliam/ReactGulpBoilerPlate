@@ -79,7 +79,11 @@ gulp.task('watch', function() {
 gulp.task('default', ['server', 'watch', 'sass']);
 
 
-//This is for prod use
+//
+//FUNCTION FOR PROD
+//IT IS CURRENTLY NOT OFFICALLY SUPPORTED
+//
+
 function buildProdScript(file) {
 
   var props = {
@@ -102,9 +106,5 @@ function buildProdScript(file) {
 
   return rebundle();
 }
-
-gulp.task('build', function() {
-  return buildProdScript('js/app.js');
-});
 
 
