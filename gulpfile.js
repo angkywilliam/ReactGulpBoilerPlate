@@ -71,7 +71,7 @@ gulp.task('sass', function() {
 });
 
 gulp.task('watch', function() {
-  livereload.listen();
+  livereload.listen(); //Make sure to install live reload chrome extension
   gulp.watch('css/scss/*.scss', ['sass']);
   return buildWatchScript('js/app.js');
 });
