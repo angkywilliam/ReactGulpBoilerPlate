@@ -18,6 +18,7 @@ var livereload = require('gulp-livereload');
 var exec = require('child_process').exec;
 var minifyCss = require('gulp-minify-css');
 var htmlreplace = require('gulp-html-replace');
+var autoprefixer = require('gulp-autoprefixer');
 
 function handleErrors() {
   var args = Array.prototype.slice.call(arguments);
@@ -72,6 +73,10 @@ gulp.task('copy', function(){
 gulp.task('sass', function() {
   return gulp.src('css/scss/*.scss')
       .pipe(sass())
+      .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
       .pipe(concatCss('style.css'))
       .pipe(gulp.dest('./build/'))
       .pipe(livereload());
@@ -120,6 +125,10 @@ gulp.task('build', function() {
 gulp.task('sass-build', function() {
   return gulp.src('css/scss/*.scss')
       .pipe(sass())
+      .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }))
       .pipe(concatCss('style.min.css'))
       .pipe(minifyCss({compatibility: 'ie8'}))
       .pipe(gulp.dest('./build/'))
